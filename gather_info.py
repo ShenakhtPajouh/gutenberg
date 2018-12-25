@@ -15,9 +15,9 @@ def isvalid(id_num):
 
     """
     try:
-        langauge = get_metadata('language', id_num)
+        language = get_metadata('language', id_num)
         form = get_metadata('formaturi', id_num)
-        if 'en' not in langauge:
+        if 'en' not in language:
             return False
         form = ' '.join(form)
         if re.search(r'\d+\.txt', form):

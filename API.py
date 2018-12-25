@@ -8,8 +8,11 @@ from gutenberg.acquire import load_etext
 from gutenberg.cleanup import strip_headers
 
 
-def get_books():
+def get_books(books_list=None):
     """
+
+    Args:
+        books_list: (Optional) list of books gutenberg ID to create books. if it is None then it will return all books.
 
     Returns:
          a dictionary of books objects {id: GutenbergBook(id)}
@@ -19,6 +22,8 @@ def get_books():
         books_id = pickle.load(pk)
         pk.close()
         assert isinstance(books_id, set)
+        if books_list is not None:
+            books_id = books_id & set(books_list)
     else:
         books_id = set()
 
@@ -27,16 +32,20 @@ def get_books():
         books_metadata = pickle.load(pk)
         pk.close()
         assert isinstance(books_metadata, dict)
+
     else:
         books_metadata = dict()
 
-    books_id = books_id | set(books_metadata)
+    books_metadata = {id: books_metadata[id] for id in books_metadata if id in books_id}
     books = create_gutenberg_books(books_metadata) | create_gutenberg_books(books_id - set(books_metadata))
     return {b.id: b for b in books}
 
 
-def get_bookshelves():
+def get_bookshelves(bookshelves_list=None):
     """
+
+    Args:
+        bookshelves_list: (Optional) list of bookshelves to return. if it is None then it will return all bookshelves
 
     Returns:
         a dictionary of bookshelves {bookshelf: bookshelf_elements_id}
@@ -47,6 +56,9 @@ def get_bookshelves():
         bookshelves = pickle.load(pk)
         pk.close()
         assert isinstance(bookshelves, dict)
+        if bookshelves_list is not None:
+            bookshelves = {bookshelf: bookshelves[bookshelf] for bookshelf in bookshelves
+                           if bookshelf in bookshelves_list}
         bookshelves = defaultdict(lambda: set(), bookshelves)
     else:
         bookshelves = defaultdict(lambda: set())
@@ -105,8 +117,8 @@ def download_books(books, rewrite=False, ignore_invalid_books = True):
 
     Args:
         books: a list of ids or GutenbergBooks
-        rewrite: if True rewrite the existing files
-        ignore_invalid_books: if True then it will ignore invalid books
+        rewrite: (Optional) if True rewrite the existing files
+        ignore_invalid_books: (Optional) if True then it will ignore invalid books
 
     """
     for book in books:

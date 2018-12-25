@@ -1,7 +1,15 @@
 from gutenberg.query import get_metadata
 
+
 class GutenbergBook(object):
     def __init__(self, id, metadata=None):
+        """
+
+        Args:
+            id: the gutenberg ID
+            metadata: (Optional) if it is not None it will construct Book from metadata.
+                      metadata is a dictionary which includes ["title", "authors", "language", "bookshelves"]
+        """
         if not isinstance(id, int):
             raise TypeError("id must be a positive integer")
         if id <= 0:
