@@ -80,6 +80,8 @@ def add_bookshelves(bookshelves_names):
     """
     new_bookshelves = dict()
     for name in bookshelves_names:
+        if not isfile(HP.PAGES_PATH + name + ".txt"):
+            continue
         f = open(HP.PAGES_PATH + name + ".txt", "r")
         text = f.read()
         f.close()
@@ -93,6 +95,8 @@ def add_bookshelves(bookshelves_names):
         new_bookshelves[bookshelf] = new_bookshelves[bookshelf] - bookshelves[bookshelf]
         bookshelves[bookshelf] = bookshelves[bookshelf] | new_bookshelves[bookshelf]
         for id in new_bookshelves[bookshelf]:
+            if id not in books:
+                books[id] = GutenbergBook(id)
             books[id].add_bookshelf(bookshelf)
 
     books = create_metadata(books)
