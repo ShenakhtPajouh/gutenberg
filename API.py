@@ -101,12 +101,12 @@ def add_bookshelves(bookshelves_names):
 
     books = create_metadata(books)
 
-    with open(HP.BOOKS_DATA_PATH, "wb") as f:
-        pickle.dump(books, f)
-        f.close()
-
     with open(HP.BOOKS_ID_PATH, "wb") as f:
         pickle.dump(set(books.keys()), f)
+        f.close()
+
+    with open(HP.BOOKS_DATA_PATH, "wb") as f:
+        pickle.dump(books, f)
         f.close()
 
     with open(HP.BOOK_SHELVES_PATH, "wb") as f:
