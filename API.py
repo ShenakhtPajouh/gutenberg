@@ -66,7 +66,7 @@ def add_books(books_list):
         books_list: a set of books id or GutenbergBooks
 
     """
-    gb_list = {book for book in books_list if isinstance(books_list, GutenbergBook)}
+    gb_list = {book for book in books_list if isinstance(book, GutenbergBook)}
     id_list = {book for book in books_list if isinstance(book, int)}
     books = get_books()
     new_metadata_id = create_metadata(id_list)
@@ -118,18 +118,18 @@ def add_bookshelves(new_bookshelves):
     """
     assert isinstance(new_bookshelves, dict)
     bookshelves = defaultdict(lambda: set(), get_bookshelves())
-    new_ids = set(sum(new_bookshelves.values(), []))
+    new_ids = set.union(*new_bookshelves.values())
     books = get_books(new_ids)
     new_books = create_metadata(new_ids - set(books))
-    new_books = create_gutenberg_books(new_books)
+    new_books = create_gutenberg_books(new_books, dic=True)
     books = dict(books.items() + new_books.items())
     for bookshelf, bookshelf_ids in new_bookshelves.items():
         bookshelves[bookshelf] = bookshelves[bookshelf] | bookshelf_ids
         for id in bookshelf_ids:
             books[id].add_bookshelf(bookshelf)
-    add_books(books)
+    add_books(books.values())
     with open(HP.BOOK_SHELVES_PATH, "wb") as f:
-        pickle.dump(dict(bookshelves))
+        pickle.dump(dict(bookshelves), f)
 
 
 def download_books(books, rewrite=False, ignore_invalid_books=True):

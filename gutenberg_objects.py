@@ -12,7 +12,7 @@ class GutenbergBook(object):
             raise TypeError("id must be a positive integer")
         self._id = id
         self._title = metadata["title"]
-        self._authors = metadata["author"]
+        self._authors = metadata["authors"]
         self._language = metadata["language"]
         self._bookshelves = metadata["bookshelves"]
 
