@@ -9,24 +9,19 @@ from gutenberg.cleanup import strip_headers
 from metadata import create_metadata
 
 
-def get_books(books_list=None, book_object=True):
+def get_books(books_list=None, books_features=None, book_object=True):
     """
 
     Args:
         books_list: (Optional) list of books gutenberg ID to create books. if it is None then it will return all books.
+        books_features: (Optional) features to get books with that feature. a dictionary which values are set or list.
         book_object: if it is True then returns GutenbergBooks else it will return metadata
 
     Returns:
          a dictionary of books objects {id: GutenbergBook(id)/metadata(id)}
     """
-    if isfile(HP.BOOKS_ID_PATH):
-        pk = open(HP.BOOKS_ID_PATH, "rb")
-        books_id = pickle.load(pk)
-        pk.close()
-        assert isinstance(books_id, set)
-    else:
-        books_id = set()
-
+    if books_list is not None and books_features is not None:
+        raise AttributeError("only one of books_list and books_features should be identified")
     if isfile(HP.BOOKS_DATA_PATH):
         pk = open(HP.BOOKS_DATA_PATH, "rb")
         books_metadata = pickle.load(pk)
@@ -36,22 +31,13 @@ def get_books(books_list=None, book_object=True):
     else:
         books_metadata = dict()
 
-    metadata_set = set(books_metadata)
-    if metadata_set - books_id != set():
-        books_id = books_id | metadata_set
-        pk = open(HP.BOOKS_ID_PATH, "wb")
-        pickle.dump(books_id, pk)
-        pk.close()
-    if books_id - metadata_set != set():
-        new_books_id = books_id - metadata_set
-        new_metadata = create_metadata(new_books_id)
-        books_metadata = dict(books_metadata.items() + new_metadata.items())
-        pk = open(HP.BOOKS_DATA_PATH, "wb")
-        pickle.dump(books_metadata, pk)
-        pk.close()
     if books_list is not None:
-        books_list = books_list & books_id
+        books_list = books_list & set(books_metadata)
         books_metadata = {id: books_metadata[id] for id in books_list}
+    if books_features is not None:
+        for feature, items in books_features.items():
+            books_metadata = {id: metadata for id, metadata in books_metadata.items()
+                              if items.issubset(metadata[feature])}
     if book_object:
         return create_gutenberg_books(books_metadata, dic=True)
     return books_metadata
@@ -69,6 +55,7 @@ def add_books(books_list):
     gb_list = {book for book in books_list if isinstance(book, GutenbergBook)}
     id_list = {book for book in books_list if isinstance(book, int)}
     books = get_books()
+    id_list = id_list - set(books)
     new_metadata_id = create_metadata(id_list)
     new_books = gb_list | create_gutenberg_books(new_metadata_id)
     for book in new_books:
@@ -152,7 +139,7 @@ def download_books(books, rewrite=False, ignore_invalid_books=True):
             if ignore_invalid_books:
                 continue
             else:
-                raise TypeError("invalid book id")
+                raise AttributeError("invalid book id")
         path = HP.BOOKS_PATH + str(id) + ".txt"
         if (not rewrite) and isfile(path):
             continue
