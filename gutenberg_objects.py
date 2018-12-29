@@ -41,7 +41,7 @@ class GutenbergBook(object):
 
     @property
     def metadata(self):
-        return gutenberg_metadata(self.title, self.authors, self.language, self.bookshelves)
+        return book_metadata(self.title, self.authors, self.language, self.bookshelves)
 
     def add_bookshelf(self, shelf):
         if not isinstance(shelf, str):
@@ -70,7 +70,7 @@ def create_gutenberg_books(inputs, dic=False):
         return set(res.values())
 
 
-def gutenberg_metadata(title=None, authors=None, language=None, bookshelves=None):
+def book_metadata(title=None, authors=None, language=None, bookshelves=None):
     """
 
     A helper for creating metadata
