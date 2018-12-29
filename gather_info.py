@@ -1,4 +1,5 @@
 from gutenberg.query import get_metadata
+from metadata import metadata
 import re
 
 
@@ -15,7 +16,7 @@ def isvalid(id_num):
 
     """
     try:
-        language = get_metadata('language', id_num)
+        language = metadata(id_num)['language']
         form = get_metadata('formaturi', id_num)
         if 'en' not in language:
             return False

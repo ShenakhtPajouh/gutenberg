@@ -56,13 +56,11 @@ def add_books(books_list):
     id_list = {book for book in books_list if isinstance(book, int)}
     books = get_books()
     id_list = id_list - set(books)
+    assert all([isvalid(i) for i in id_list])
     new_metadata_id = create_metadata(id_list)
     new_books = gb_list | create_gutenberg_books(new_metadata_id)
     for book in new_books:
         books[book.id] = book
-    pk = open(HP.BOOKS_ID_PATH, "wb")
-    pickle.dump(set(books), pk)
-    pk.close()
     pk = open(HP.BOOKS_DATA_PATH, "wb")
     pickle.dump(create_metadata(books.values()), pk)
     pk.close()

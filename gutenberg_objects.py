@@ -25,7 +25,7 @@ class GutenbergBook(object):
 
     @property
     def title(self):
-        return self._title.copy()
+        return self._title
 
     @property
     def authors(self):
@@ -33,7 +33,7 @@ class GutenbergBook(object):
 
     @property
     def language(self):
-        return self._language.copy()
+        return self._language
 
     @property
     def bookshelves(self):
@@ -123,6 +123,7 @@ def gutenberg_metadata(title=None, authors=None, language=None, bookshelves=None
         else:
             assert all([isinstance(s, str) for s in x])
             res[name] = set(x)
+    return res
 
 
 
