@@ -1,4 +1,4 @@
-from gutenberg_objects import GutenbergBook, gutenberg_metadata
+from gutenberg_objects import GutenbergBook, book_metadata
 import gutenberg.query as gq
 
 
@@ -16,7 +16,7 @@ def metadata(book_id):
     authors = {str(x) for x in gq.get_metadata('author', book_id)}
     language = {str(x) for x in gq.get_metadata('language', book_id)}
     bookshelves = set()
-    return gutenberg_metadata(title, authors, language, bookshelves)
+    return book_metadata(title, authors, language, bookshelves)
 
 
 def create_metadata(inputs):
