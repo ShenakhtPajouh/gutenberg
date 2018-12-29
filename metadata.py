@@ -1,4 +1,4 @@
-from gutenberg_objects import GutenbergBook
+from gutenberg_objects import GutenbergBook, gutenberg_metadata
 import gutenberg.query as gq
 from gather_info import isvalid
 
@@ -14,11 +14,11 @@ def metadata(book_id):
                                 which bookshelves is an empty set
     """
     assert isvalid(book_id)
-    title = list(gq.get_metadata('title', book_id))[0]
+    title = set(gq.get_metadata('title', book_id))
     authors = set(gq.get_metadata('author', book_id))
-    language = list(gq.get_metadata('language', book_id))[0]
+    language = set(gq.get_metadata('language', book_id))
     bookshelves = set()
-    return {'title': title, 'authors': authors, 'language': language, 'bookshelves': bookshelves}
+    return gutenberg_metadata(title, authors, language, bookshelves)
 
 
 def create_metadata(inputs):

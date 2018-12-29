@@ -11,9 +11,9 @@ class GutenbergBook(object):
         if id <= 0:
             raise TypeError("id must be a positive integer")
         self._id = id
-        self._title = metadata["title"]
+        self._title = list(metadata["title"])[0]
         self._authors = metadata["authors"]
-        self._language = metadata["language"]
+        self._language = list(metadata["language"])[0]
         self._bookshelves = metadata["bookshelves"]
 
     def __hash__(self):
@@ -25,7 +25,7 @@ class GutenbergBook(object):
 
     @property
     def title(self):
-        return self._title
+        return self._title.copy()
 
     @property
     def authors(self):
@@ -33,7 +33,7 @@ class GutenbergBook(object):
 
     @property
     def language(self):
-        return self._language
+        return self._language.copy()
 
     @property
     def bookshelves(self):
@@ -41,8 +41,7 @@ class GutenbergBook(object):
 
     @property
     def metadata(self):
-        return {"title": self.title, "authors": self.authors,
-                "language": self.language, "bookshelves": self.bookshelves}
+        return gutenberg_metadata(self.title, self.authors, self.language, self.bookshelves)
 
     def add_bookshelf(self, shelf):
         if not isinstance(shelf, str):
@@ -69,6 +68,62 @@ def create_gutenberg_books(inputs, dic=False):
         return res
     else:
         return set(res.values())
+
+
+def gutenberg_metadata(title=None, authors=None, language=None, bookshelves=None):
+    """
+
+    A helper for creating metadata
+
+    Args:
+        tittle, metdata, language and bookshelves are either string or simple list, set or ... of strings.
+        if one of them is None, it will be ignored in return
+
+    Returns:
+         a dictionary of metadata form for a book with keys which are given
+
+    """
+    res = dict()
+
+    x = title
+    name = "title"
+    if x is not None:
+        if isinstance(x, str):
+            res[name] = {x}
+        else:
+            assert len(x) == 1
+            assert all([isinstance(s, str) for s in x])
+            res[name] = set(x)
+
+    x = authors
+    name = "authors"
+    if x is not None:
+        if isinstance(x, str):
+            res[name] = {x}
+        else:
+            assert len(x) >= 1
+            assert all([isinstance(s, str) for s in x])
+            res[name] = set(x)
+
+    x = language
+    name = "language"
+    if x is not None:
+        if isinstance(x, str):
+            res[name] = {x}
+        else:
+            assert len(x) == 1
+            assert all([isinstance(s, str) for s in x])
+            res[name] = set(x)
+
+    x = bookshelves
+    name = "bookshelves"
+    if x is not None:
+        if isinstance(x, str):
+            res[name] = {x}
+        else:
+            assert all([isinstance(s, str) for s in x])
+            res[name] = set(x)
+
 
 
 
