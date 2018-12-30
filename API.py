@@ -7,6 +7,9 @@ from collections import defaultdict
 from gutenberg.acquire import load_etext
 from gutenberg.cleanup import strip_headers
 from metadata import create_metadata
+from paragraph import *
+import paragraph_analyse as pa
+import nltk
 
 
 def get_books(books_list=None, books_features=None, book_object=True):
@@ -117,6 +120,61 @@ def add_bookshelves(new_bookshelves):
         pickle.dump(dict(bookshelves), f)
 
 
+def get_paragraphs(paragraph_id=None, books=None, tags=None, num_sequential=1, Paragraph_Object=True):
+    """
+
+    Get paragraphs from args.
+
+    Args:
+        paragraph_id: (Optional) a list of ints
+        books: (Optional) a list of books id or GutenbergBooks
+        tags: (Optional) a list of tags
+        num_sequential: the number of sequential paragraphs
+        Paragraph_Object: if it is True outputs will be type of Paragraph
+
+    Returns:
+        a list of paragraphs or list of tuples of paragraphs if num_sequential > 1
+
+    """
+    if paragraph_id is not None and (books is not None or tags is not None):
+        raise ValueError("if paragraph_id is given, books and tags can't be accepted.")
+    with open(HP.PARAGRAPH_METADATA_PATH, "rb") as pkl:
+        met_data = pickle.load(pkl)
+    with open(HP.PARAGRAPH_DATA_PATH, "rb") as pkl:
+        text = pickle.load(pkl)
+    pars = create_paragraphs(met_data, text)
+    text, met_data = None
+    if paragraph_id is not None:
+        pars = {i: par for i, par in pars.items() if par.id in paragraph_id}
+    if books is not None:
+        books = {i for i in books if isinstance(i, int)} | {book.id for book in books if isinstance(book, GutenbergBook)}
+        pars = {i: par for i, par in pars.items() if par.book_id in books}
+    if tags is not None:
+        pars = {i: par for i, par in pars.items() if par.tags.issuperset(tags)}
+    if num_sequential == 1:
+        return pars.values()
+    assert num_sequential > 1
+    pars2 = []
+    for par in pars.values():
+        pp = [par]
+        next_par = par
+        flag = True
+        for k in range(1, num_sequential):
+            cur_par = next_par
+            id = cur_par.next_id
+            if id not in pars:
+                flag = False
+                break
+            next_par = pars[id]
+            pp.append(next_par)
+        if flag:
+            pars2.append(tuple(pp))
+    return pars2
+
+
+
+
+
 def download_books(books, rewrite=False, ignore_invalid_books=True):
     """
 
@@ -145,6 +203,39 @@ def download_books(books, rewrite=False, ignore_invalid_books=True):
         f = open(path, "w")
         f.write(text)
         f.close()
+
+
+def get_paragraphs_from_book(book, Paragraph_Object=True):
+    """
+
+    Create a list of paragraphs from books
+
+    Args:
+        book: either an int (book_id) or GutenbergBook
+        Paragraph_Object: if it is True, the outputs will be Paragraph_Objects
+    Returns:
+         a dictionary of Paragraphs (id: Paragraph(id))
+
+    """
+    if isinstance(book, GutenbergBook):
+        book = book.id
+    elif not isinstance(book, int):
+        raise TypeError("book should be an int")
+    path = HP.BOOKS_PATH + str(id) + ".txt"
+    if not isfile(path):
+        raise IOError("no such file directory as " + path)
+    with open(path, "r") as f:
+        text = f.read()
+    text = text.split('\n')
+    text = [pa.tokenize(par) for par in text]
+    text = [par for par in text if par != []]
+    if not Paragraph_Object:
+        return text
+    return [Paragraph(t) for t in text]
+
+
+
+
 
 
 

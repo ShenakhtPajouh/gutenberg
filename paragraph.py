@@ -1,14 +1,20 @@
+from collections import defaultdict
+
 class Paragraph(object):
-    def __init__(self, id, text, book_id=None, next_id=None, prev_id=None, tags=dict()):
-        assert isinstance(id, int)
-        assert id > 0
+    def __init__(self, text, id=None, book_id=None, next_id=None, prev_id=None, tags=set()):
+        if id is not None:
+            assert isinstance(id, int)
+            assert id > 0
         if book_id is not None:
+            assert isinstance(book_id, int)
             assert book_id > 0
         if next_id is not None:
+            assert isinstance(next_id, int)
             assert next_id > 0
         if prev_id is not None:
+            assert isinstance(prev_id, int)
             assert prev_id > 0
-        assert isinstance(tags, dict)
+        assert isinstance(tags, set())
         assert isinstance(text, list)
         assert all([isinstance(sent, list) for sent in text])
         assert all([all([isinstance(word, str) for word in sent]) for sent in text])
@@ -39,9 +45,24 @@ class Paragraph(object):
     @property
     def next_id(self):
         return self._next_id
+
+    @next_id.setter
+    def next_id(self, next_id):
+        if next_id is not None:
+            assert isinstance(next_id, int)
+            assert next_id > 0
+            self._next_id = next_id
+
     @property
     def prev_id(self):
         return self._prev_id
+
+    @prev_id.setter
+    def prev_id(self, prev_id):
+        if prev_id is not None:
+            assert isinstance(prev_id, int)
+            assert prev_id > 0
+            self._prev_id = prev_id
 
     @property
     def tags(self):
@@ -63,6 +84,21 @@ class Paragraph(object):
     @property
     def words(self):
         return sum(self._text, [])
+
+
+def create_paragraphs(paragraph_metadata, paragraph_text):
+    assert set(paragraph_metadata) == set(paragraph_text)
+    pars = []
+    for i, met in paragraph_metadata.items():
+        mt = defaultdict(lambda : None, met)
+        if "tags" not in met:
+            tags = dict()
+        else:
+            tags = met["tags"]
+        par = Paragraph(text=paragraph_text[i], id=mt["id"], book_id=mt["book_id"], next_id=mt["next_id"],
+                        prev_id=mt["prev_id"], tags=tags)
+        pars.append((i, par))
+    return dict(pars)
 
 
 def paragraph_metadata(id=None, book_id=None, prev_id=None, next_id=None,tags=None):
