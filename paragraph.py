@@ -119,42 +119,30 @@ def paragraph_metadata(id=None, book_id=None, prev_id=None, next_id=None,tags=No
     x = id
     name = "id"
     if x is not None:
-        if isinstance(x, int):
-            res[name] = {x}
-        else:
-            assert len(x) == 1
-            assert all([isinstance(s, int) for s in x])
-            res[name] = set(x)
+        if not isinstance(x, int):
+            raise TypeError()
+        res[name] = x
 
     x = book_id
     name = "book_id"
     if x is not None:
-        if isinstance(x, int):
-            res[name] = {x}
-        else:
-            assert len(x) == 1
-            assert all([isinstance(s, int) for s in x])
-            res[name] = set(x)
+        if not isinstance(x, int):
+            raise TypeError()
+        res[name] = x
 
     x = prev_id
     name = "prev_id"
     if x is not None:
-        if isinstance(x, int):
-            res[name] = {x}
-        else:
-            assert len(x) == 1
-            assert all([isinstance(s, int) for s in x])
-            res[name] = set(x)
+        if not isinstance(x, int):
+            raise TypeError()
+        res[name] = x
 
     x = next_id
     name = "next_id"
     if x is not None:
-        if isinstance(x, int):
-            res[name] = {x}
-        else:
-            assert len(x) == 1
-            assert all([isinstance(s, int) for s in x])
-            res[name] = set(x)
+        if not isinstance(x, int):
+            raise TypeError()
+        res[name] = x
 
     x = tags
     name = "tags"
