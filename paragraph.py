@@ -14,7 +14,7 @@ class Paragraph(object):
         if prev_id is not None:
             assert isinstance(prev_id, int)
             assert prev_id > 0
-        assert isinstance(tags, set())
+        assert isinstance(tags, set)
         assert isinstance(text, list)
         assert all([isinstance(sent, list) for sent in text])
         assert all([all([isinstance(word, str) for word in sent]) for sent in text])
