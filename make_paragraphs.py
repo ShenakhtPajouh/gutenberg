@@ -3,6 +3,7 @@ import API
 import HP
 from paragraph_analyse import tagger
 import pickle
+import os
 
 
 def make_paragraphs(books_list=None):
@@ -29,8 +30,14 @@ def make_paragraphs(books_list=None):
             prev_par = par
             paragraphs[index] = par
     paragraphs_metadata = {id: par.metadata for id, par in paragraphs.items()}
+    path = os.path.dirname(HP.PARAGRAPH_DATA_PATH)
+    if not os.path.exists(path):
+        os.makedirs(path)
     with open(HP.PARAGRAPH_DATA_PATH, "wb") as pkl:
         pickle.dump(paragraphs, pkl)
+    path = os.path.dirname(HP.PARAGRAPH_METADATA_PATH)
+    if not os.path.exists(path):
+        os.makedirs(path)
     with open(HP.PARAGRAPH_METADATA_PATH, "wb") as pkl:
         pickle.dump(paragraphs_metadata, pkl)
 

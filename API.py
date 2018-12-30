@@ -1,6 +1,6 @@
 import HP
 import pickle
-from os.path import isfile
+import os
 from gutenberg_objects import *
 from gather_info import *
 from collections import defaultdict
@@ -25,7 +25,7 @@ def get_books(books_list=None, books_features=None, book_object=True):
     """
     if books_list is not None and books_features is not None:
         raise AttributeError("only one of books_list and books_features should be identified")
-    if isfile(HP.BOOKS_DATA_PATH):
+    if os.path.isfile(HP.BOOKS_DATA_PATH):
         pk = open(HP.BOOKS_DATA_PATH, "rb")
         books_metadata = pickle.load(pk)
         pk.close()
@@ -64,6 +64,9 @@ def add_books(books_list):
     new_books = gb_list | create_gutenberg_books(new_metadata_id)
     for book in new_books:
         books[book.id] = book
+    path = os.path.dirname(HP.BOOKS_DATA_PATH)
+    if not os.path.exists(path):
+        os.makedirs(path)
     pk = open(HP.BOOKS_DATA_PATH, "wb")
     pickle.dump(create_metadata(books.values()), pk)
     pk.close()
@@ -79,7 +82,7 @@ def get_bookshelves(bookshelves_list=None):
         a dictionary of bookshelves {bookshelf: bookshelf_elements_id}
 
     """
-    if isfile(HP.BOOK_SHELVES_PATH):
+    if os.path.isfile(HP.BOOK_SHELVES_PATH):
         pk = open(HP.BOOK_SHELVES_PATH, "rb")
         bookshelves = pickle.load(pk)
         pk.close()
@@ -116,6 +119,9 @@ def add_bookshelves(new_bookshelves):
         for id in bookshelf_ids:
             books[id].add_bookshelf(bookshelf)
     add_books(books.values())
+    path = os.path.dirname(HP.BOOK_SHELVES_PATH)
+    if not os.path.exists(path):
+        os.makedirs(path)
     with open(HP.BOOK_SHELVES_PATH, "wb") as f:
         pickle.dump(dict(bookshelves), f)
 
@@ -172,9 +178,6 @@ def get_paragraphs(paragraph_id=None, books=None, tags=None, num_sequential=1, P
     return pars2
 
 
-
-
-
 def download_books(books, rewrite=False, ignore_invalid_books=True):
     """
 
@@ -186,6 +189,8 @@ def download_books(books, rewrite=False, ignore_invalid_books=True):
         ignore_invalid_books: (Optional) if True then it will ignore invalid books
 
     """
+    if not os.path.exists(HP.BOOKS_PATH):
+        os.makedirs(HP.BOOKS_PATH)
     for book in books:
         if isinstance(book, GutenbergBook):
             id = book.id
@@ -197,7 +202,7 @@ def download_books(books, rewrite=False, ignore_invalid_books=True):
             else:
                 raise AttributeError("invalid book id")
         path = HP.BOOKS_PATH + str(id) + ".txt"
-        if (not rewrite) and isfile(path):
+        if (not rewrite) and os.path.isfile(path):
             continue
         text = strip_headers(load_etext(id)).strip().encode('UTF-8')
         f = open(path, "w")
@@ -222,7 +227,7 @@ def get_paragraphs_from_book(book, Paragraph_Object=True):
     elif not isinstance(book, int):
         raise TypeError("book should be an int")
     path = HP.BOOKS_PATH + str(id) + ".txt"
-    if not isfile(path):
+    if not os.path.isfile(path):
         raise IOError("no such file directory as " + path)
     with open(path, "r") as f:
         text = f.read()
