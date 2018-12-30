@@ -79,7 +79,7 @@ class Paragraph(object):
 
     @property
     def sentences(self):
-        return [sent.copy() for sent in self._text]
+        return [[word for word in sent] for sent in self._text]
 
     @property
     def words(self):
