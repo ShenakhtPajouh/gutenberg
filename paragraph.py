@@ -1,26 +1,3 @@
-
-def paragraph_tags():
-    raise NotImplementedError
-
-def get_tag(tag):
-    """
-
-    Args:
-        tag: either an int or str
-
-    Returns:
-        if tag is int the name (str) of tag else the int_code of tag
-
-    """
-    tags = paragraph_tags()
-    if tag is int:
-        return tags[tag]
-    ls = [i for i, s in tags.items() if s == tag]
-    if len(ls) == 0:
-        raise ValueError("tag is not listed in tags")
-    return ls[0]
-
-
 class Paragraph(object):
     def __init__(self, id, text, book_id=None, next_id=None, prev_id=None, tags=dict()):
         assert isinstance(id, int)
