@@ -88,8 +88,6 @@ class Paragraph(object):
         return sum(self._text, [])
 
 
-
-
 def paragraph_metadata(id=None, book_id=None, prev_id=None, next_id=None,tags=None):
     """
 
