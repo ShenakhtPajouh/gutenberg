@@ -3,8 +3,8 @@ BOOK_SHELVES_PATH = "metadata/books_shelves.pkl"
 BOOKS_PATH = "books/"
 PAGES_PATH = "pages/"
 BOOK_SHELVES_LIST_PATH = "shelves.txt"
-PARAGRAPH_METADATA_PATH = "paragraph_metadata.txt"
-PARAGRAPH_DATA_PATH = "paragraph_data.txt"
+PARAGRAPH_METADATA_PATH = "metadata/paragraph_metadata.pkl"
+PARAGRAPH_DATA_PATH = "metadata/paragraph_data.pkl"
 
 
 class Tags:
