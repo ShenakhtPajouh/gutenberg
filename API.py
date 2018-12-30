@@ -226,7 +226,7 @@ def get_paragraphs_from_book(book, Paragraph_Object=True):
         book = book.id
     elif not isinstance(book, int):
         raise TypeError("book should be an int")
-    path = HP.BOOKS_PATH + str(id) + ".txt"
+    path = HP.BOOKS_PATH + str(book) + ".txt"
     if not os.path.isfile(path):
         raise IOError("no such file directory as " + path)
     with open(path, "r") as f:
