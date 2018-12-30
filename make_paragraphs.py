@@ -30,7 +30,7 @@ def make_paragraphs(books_list=None):
             prev_par = par
             paragraphs[index] = par
     paragraphs_metadata = {id: par.metadata for id, par in paragraphs.items()}
-    paragraphs = [paragraph.sentences for paragraph in paragraphs]
+    paragraphs = [paragraph.sentences for paragraph in paragraphs.values()]
     path = os.path.dirname(HP.PARAGRAPH_DATA_PATH)
     if not os.path.exists(path):
         os.makedirs(path)
