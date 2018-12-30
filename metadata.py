@@ -16,7 +16,7 @@ def metadata(book_id):
     authors = {str(x) for x in gq.get_metadata('author', book_id)}
     language = {str(x) for x in gq.get_metadata('language', book_id)}
     bookshelves = set()
-    return book_metadata(title, authors, language, bookshelves)
+    return book_metadata(book_id, title, authors, language, bookshelves)
 
 
 def create_metadata(inputs):
