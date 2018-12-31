@@ -4,7 +4,7 @@ import HP
 from paragraph_analyse import tagger
 import pickle
 import os
-
+import sys
 
 def make_paragraphs(books_list=None):
     """
@@ -44,6 +44,9 @@ def make_paragraphs(books_list=None):
 
 
 if __name__ == "__main__":
+    # sys.setdefaultencoding() does not exist, here!
+    reload(sys)  # Reload does the trick!
+    sys.setdefaultencoding('UTF8')
     make_paragraphs()
 
 
