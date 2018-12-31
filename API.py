@@ -175,7 +175,7 @@ def get_paragraphs(paragraph_id=None, books=None, tags=None, num_sequential=1, P
     return pars2
 
 
-def download_books(books, rewrite=False, ignore_invalid_books=True):
+def download_books(books, rewrite=False, ignore_invalid_books=True, Print=False):
     """
 
     Download all books in books and save the text in file HP.BOOKS_PATH/<book id>.txt .
@@ -201,6 +201,8 @@ def download_books(books, rewrite=False, ignore_invalid_books=True):
         path = HP.BOOKS_PATH + str(id) + ".txt"
         if (not rewrite) and os.path.isfile(path):
             continue
+        if Print:
+            print("downloading " + str(id))
         text = strip_headers(load_etext(id)).strip().encode('UTF-8')
         f = open(path, "w")
         f.write(text)

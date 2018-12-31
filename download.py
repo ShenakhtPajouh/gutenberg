@@ -8,7 +8,7 @@ def download_all_books():
 
     """
     books_id = get_books(book_object=False).keys()
-    download_books(books_id)
+    download_books(books_id, Print=True)
 
 
 if __name__ == "__main__":
