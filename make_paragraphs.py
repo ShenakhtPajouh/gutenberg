@@ -14,7 +14,7 @@ def make_paragraphs(books_list=None):
         books_list: (Optional) if it is None, only paragraphs from the list will be created
 
     """
-    books = set(API.get_books(books_list))
+    books = set(API.get_books(books_list, books_features={'tags': {'ascii'}}))
     paragraphs = dict()
     index = 0
     for book_id in books:
