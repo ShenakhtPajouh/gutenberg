@@ -5,7 +5,7 @@ from paragraph_analyse import tagger
 import pickle
 import os
 
-def make_paragraphs(books_list=None):
+def make_paragraphs(books_list=None, Print=False):
     """
 
     Create paragraphs from available books
@@ -14,13 +14,21 @@ def make_paragraphs(books_list=None):
         books_list: (Optional) if it is None, only paragraphs from the list will be created
 
     """
-    books = set(API.get_books(books_list, books_features={'tags': {'ascii'}}))
+    books = set(API.get_books(books_list))
+    books_num = len(books)
     paragraphs = dict()
     index = 0
+    i = 0
     for book_id in books:
+        i = i + 1
+        if Print:
+            print(str(i) + '/' + str(books_num))
         pars = API.get_paragraphs_from_book(book_id, False)
         prev_par = None
         for t in pars:
+            if t == [[['<utf8-error>']]]:
+                prev_par = None
+                continue                
             index = index + 1
             par = Paragraph(text=t, id=index, book_id=book_id, tags=tagger(t))
             if prev_par is not None:

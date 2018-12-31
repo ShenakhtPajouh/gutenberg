@@ -234,10 +234,15 @@ def get_paragraphs_from_book(book, Paragraph_Object=True):
         raise IOError("no such file directory as " + path)
     with open(path, "r") as f:
         text = f.read()
-    text = text.decode('UTF-8')
     text = text.split('\n')
-    text = [pa.tokenize(par) for par in text]
-    text = [par for par in text if par != []]
+    text2 = []
+    for par in text:
+        try:
+            txt = pa.tokenize(par)
+            text2.append(txt)
+        except UnicodeDecodeError:
+            text2.append([[['<utf8-error>']]])
+    text = [par for par in text2 if par != []]
     if not Paragraph_Object:
         return text
     return [Paragraph(t) for t in text]
