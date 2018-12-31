@@ -1,15 +1,13 @@
 import HP
 import pickle
 import os
-from gutenberg_objects import *
+from gutenberg_book import *
 from gather_info import *
-from collections import defaultdict
 from gutenberg.acquire import load_etext
 from gutenberg.cleanup import strip_headers
 from metadata import create_metadata
 from paragraph import *
 import paragraph_analyse as pa
-import nltk
 
 
 def get_books(books_list=None, books_features=None, book_object=True):

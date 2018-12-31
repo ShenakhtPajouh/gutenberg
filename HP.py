@@ -1,10 +1,10 @@
-BOOKS_DATA_PATH = "metadata/books_data.pkl"
-BOOK_SHELVES_PATH = "metadata/books_shelves.pkl"
+BOOKS_DATA_PATH = "data/books_data.pkl"
+BOOK_SHELVES_PATH = "data/books_shelves.pkl"
 BOOKS_PATH = "books/"
 PAGES_PATH = "pages/"
 BOOK_SHELVES_LIST_PATH = "shelves.txt"
-PARAGRAPH_METADATA_PATH = "metadata/paragraph_metadata.pkl"
-PARAGRAPH_DATA_PATH = "metadata/paragraph_data.pkl"
+PARAGRAPH_METADATA_PATH = "data/paragraph_metadata.pkl"
+PARAGRAPH_DATA_PATH = "data/paragraph_data.pkl"
 
 
 class Tags:

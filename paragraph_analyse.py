@@ -3,6 +3,7 @@ from paragraph import Paragraph
 from HP import Tags
 import re
 
+
 def tokenize(par):
     """
 

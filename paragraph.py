@@ -1,5 +1,6 @@
 from collections import defaultdict
 
+
 class Paragraph(object):
     def __init__(self, text, id=None, book_id=None, next_id=None, prev_id=None, tags=set()):
         if id is not None:

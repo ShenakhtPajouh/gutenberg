@@ -1,4 +1,4 @@
-from gutenberg_objects import GutenbergBook, book_metadata
+from gutenberg_book import GutenbergBook, book_metadata
 import gutenberg.query as gq
 
 
