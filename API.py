@@ -206,7 +206,7 @@ def download_books(books, rewrite=False, ignore_invalid_books=True, Print=False)
             continue
         if Print:
             print("downloading " + str(id))
-            print(str(i) + '/' + str(book_num))
+            print(str(i) + '/' + str(books_num))
         text = strip_headers(load_etext(id)).strip().encode('UTF-8')
         f = open(path, "w")
         f.write(text)
