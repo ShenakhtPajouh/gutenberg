@@ -234,6 +234,7 @@ def get_paragraphs_from_book(book, Paragraph_Object=True):
         raise IOError("no such file directory as " + path)
     with open(path, "r") as f:
         text = f.read()
+    text = text.encode('UTF-8')
     text = text.split('\n')
     text = [pa.tokenize(par) for par in text]
     text = [par for par in text if par != []]
