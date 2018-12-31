@@ -188,7 +188,10 @@ def download_books(books, rewrite=False, ignore_invalid_books=True, Print=False)
     """
     if not os.path.exists(HP.BOOKS_PATH):
         os.makedirs(HP.BOOKS_PATH)
+    books_num = len(books)
+    i = 0
     for book in books:
+        i = i + 1
         if isinstance(book, GutenbergBook):
             id = book.id
         else:
@@ -203,6 +206,7 @@ def download_books(books, rewrite=False, ignore_invalid_books=True, Print=False)
             continue
         if Print:
             print("downloading " + str(id))
+            print(str(i) + '/' + str(book_num))
         text = strip_headers(load_etext(id)).strip().encode('UTF-8')
         f = open(path, "w")
         f.write(text)
