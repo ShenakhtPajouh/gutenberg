@@ -41,7 +41,7 @@ def find_books_html(text):
         a list of integers which is all id of books find in that page
 
     """
-    links = re.findall(r'<https://www.gutenberg.org/ebooks/.*>', text)
+    links = re.findall(r'https://www.gutenberg.org/ebooks/.*', text)
     links = ' '.join(links)
     ids = re.findall(r'\d+', links)
     ids = [int(x) for x in ids]
