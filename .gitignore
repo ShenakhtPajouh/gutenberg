@@ -6,3 +6,5 @@
 test*.py
 data/*
 books/*
+gutenberg_data/*
+
