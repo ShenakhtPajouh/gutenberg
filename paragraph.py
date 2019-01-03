@@ -108,7 +108,7 @@ def paragraph_metadata(id=None, book_id=None, prev_id=None, next_id=None,tags=No
     A helper for creating metadata
 
     Args:
-        book_id, tags are either string or simple list, set or ... of strings.
+        id, book_id, prev_id, next_id integer. tags is either an integer or list of integers.
         if one of them is None, it will be ignored in return
 
     Returns:
