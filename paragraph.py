@@ -125,7 +125,7 @@ def create_paragraphs(paragraph_metadata, paragraph_text):
     return dict(pars)
 
 
-def paragraph_metadata(id=None, book_id=None, prev_id=None, next_id=None,tags=None):
+def paragraph_metadata(id=None, book_id=None, prev_id=None, next_id=None, tags=None):
     """
 
     A helper for creating metadata
