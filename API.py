@@ -124,7 +124,7 @@ def add_bookshelves(new_bookshelves):
         pickle.dump(dict(bookshelves), f)
 
 
-def get_paragraphs(paragraph_id=None, books=None, tags=None, num_sequential=1, Paragraph_Object=True):
+def get_paragraphs(paragraph_id=None, books=None, tags=None, num_sequential=1, paragraph_object=True, lowercase=False):
     """
 
     Get paragraphs from args.
@@ -136,7 +136,8 @@ def get_paragraphs(paragraph_id=None, books=None, tags=None, num_sequential=1, P
               list or ... it means the tag should be at least one of those tags. for instance tags = [3, {4, 5}]
               means that paragraphs with tag 3 and 4 or 5
         num_sequential: the number of sequential paragraphs
-        Paragraph_Object: if it is True outputs will be type of Paragraph
+        paragraph_object: if it is True outputs will be type of Paragraph
+        lowercase: if it is True, then the output will be lowercase. it does not have effect if paragraph_object=True.
 
     Returns:
         a list of paragraphs or list of tuples of paragraphs if num_sequential > 1
@@ -159,30 +160,32 @@ def get_paragraphs(paragraph_id=None, books=None, tags=None, num_sequential=1, P
         pars = {i: par for i, par in pars.items() if all([not par.tags.isdisjoint(tag) for tag in tags])}
 
     if num_sequential == 1:
-        if Paragraph_Object:
+        if paragraph_object:
             return list(pars.values())
         else:
-            return [par.sentences for par in pars.values()]
-    assert num_sequential > 1
-    pars2 = []
-    for par in pars.values():
-        pp = [par]
-        next_par = par
-        flag = True
-        for k in range(1, num_sequential):
-            cur_par = next_par
-            id = cur_par.next_id
-            if id not in pars:
-                flag = False
-                break
-            next_par = pars[id]
-            pp.append(next_par)
-        if flag:
-            pars2.append(tuple(pp))
-    if Paragraph_Object:
-        return pars2
+            return [par.text(lowercase=lowercase) for par in pars.values()]
+    elif num_sequential > 1:
+        pars2 = []
+        for par in pars.values():
+            pp = [par]
+            next_par = par
+            flag = True
+            for k in range(1, num_sequential):
+                cur_par = next_par
+                id = cur_par.next_id
+                if id not in pars:
+                    flag = False
+                    break
+                next_par = pars[id]
+                pp.append(next_par)
+            if flag:
+                pars2.append(tuple(pp))
+        if paragraph_object:
+            return pars2
+        else:
+            return [tuple(par.text(lowercase=lowercase) for par in pt) for pt in pars2]
     else:
-        return [tuple(par.sentences for par in pt) for pt in pars2]
+        raise ValueError("num_sequential most be positive")
 
 
 def download_books(books, rewrite=False, ignore_invalid_books=True, Print=False):

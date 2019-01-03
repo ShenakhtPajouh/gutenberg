@@ -29,7 +29,7 @@ def tagger(par):
           a set of tags (int)
     """
     if isinstance(par, Paragraph):
-        par = Paragraph.sentences
+        par = par.text()
     tags = []
     words = sum(par, [])
     text = " ".join(words)
