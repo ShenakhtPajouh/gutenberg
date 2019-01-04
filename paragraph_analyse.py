@@ -31,8 +31,9 @@ def tagger(par):
     if isinstance(par, Paragraph):
         par = par.text()
     tags = []
-    words = sum(par, [])
-    text = " ".join(words)
+    tokens = sum(par, [])
+    text = " ".join(tokens)
+    words = [word for word in tokens if re.search(r'\w', word)]
     if len(words) < 16:
         tags.append(Tags.NOT_PARAGRAPH)
     else:
@@ -48,7 +49,7 @@ def tagger(par):
 
     if re.search(r'``.+\'\'', text) is None:
         tags.append(Tags.WITHOUT_DIALOGUE)
-    if words[0] == '``' and words[-1] == "''" and ("``" not in words[1:-1] or "''" not in words[1:-1]):
+    if tokens[0] == '``' and tokens[-1] == "''" and ("``" not in tokens[1:-1] or "''" not in tokens[1:-1]):
         tags.append(Tags.WHOLE_DIALOGUE)
     return set(tags)
 
