@@ -38,7 +38,7 @@ def tagger(par):
         tags.append(Tags.NOT_PARAGRAPH)
     else:
         tags.append(Tags.PARAGRAPH)
-    if len(par) < 4:
+    if len(par) < 4 and len(words) < 150:
         tags.append(Tags.SHORT)
     elif len(words) < 250:
         tags.append(Tags.MEDIUM)
